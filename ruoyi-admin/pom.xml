@@ -30,20 +30,20 @@
             <artifactId>mysql-connector-j</artifactId>
         </dependency>
         <!-- Oracle -->
-        <dependency>
-            <groupId>com.oracle.database.jdbc</groupId>
-            <artifactId>ojdbc8</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.oracle.database.jdbc</groupId>-->
+<!--            <artifactId>ojdbc8</artifactId>-->
+<!--        </dependency>-->
         <!-- PostgreSql -->
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.postgresql</groupId>-->
+<!--            <artifactId>postgresql</artifactId>-->
+<!--        </dependency>-->
         <!-- SqlServer -->
-        <dependency>
-            <groupId>com.microsoft.sqlserver</groupId>
-            <artifactId>mssql-jdbc</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.microsoft.sqlserver</groupId>-->
+<!--            <artifactId>mssql-jdbc</artifactId>-->
+<!--        </dependency>-->
 
         <!-- 核心模块-->
         <dependency>

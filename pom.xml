@@ -320,6 +320,7 @@
                 <version>${ruoyi-vue-plus.version}</version>
             </dependency>
 
+
         </dependencies>
     </dependencyManagement>
 
@@ -334,6 +335,8 @@
         <module>ruoyi-extend</module>
         <module>ruoyi-oss</module>
         <module>ruoyi-sms</module>
+        <module>tmai-system</module>
+        <module>tmai-app</module>
     </modules>
     <packaging>pom</packaging>
 

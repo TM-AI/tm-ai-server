@@ -1,4 +1,4 @@
-package com.tmai.app.controller;
+package com.ruoyi.web.controller.tmai;
 
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.annotation.RepeatSubmit;

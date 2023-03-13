@@ -12,6 +12,7 @@ import lombok.Getter;
 public enum ImageApiEnum implements IApi {
 
     IMG_TO_IMG("/sdapi/v1/img2img","POST","根据图片生成图片"),
+    TXT_TO_IMG("/sdapi/v1/txt2img","POST","根据文字生成图片"),
     ;
     private final String path;
 

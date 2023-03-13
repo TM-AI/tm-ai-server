@@ -1,4 +1,4 @@
-package com.tmai.app.controller;
+package com.ruoyi.web.controller.tmai;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.ruoyi.common.annotation.Log;

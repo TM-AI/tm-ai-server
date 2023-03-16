@@ -63,6 +63,12 @@ user:
 
 # Spring配置
 spring:
+  task:
+    scheduling:
+      pool:
+        # 线程池大小，默认为1
+        size: 4
+
   application:
     name: ${ruoyi.name}
   # 资源信息
@@ -135,6 +141,8 @@ security:
     # actuator 监控配置
     - /actuator
     - /actuator/**
+    # 暂时放行图片处理接口
+    - /imageHandler/**
 
 # MyBatisPlus配置
 # https://baomidou.com/config/

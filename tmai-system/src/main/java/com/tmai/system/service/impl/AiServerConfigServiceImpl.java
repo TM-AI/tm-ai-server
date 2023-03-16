@@ -34,12 +34,20 @@ public class AiServerConfigServiceImpl implements IAiServerConfigService {
 
     @Override
     public AiServerConfigVo getNextServerByType(Long type) {
-        //todo 改为用redis实现，需要过滤掉当前不可用的AI服务
-        AiServerConfigBo param = new AiServerConfigBo();
-        param.setType(type);
-        List<AiServerConfigVo> serverConfigVos = queryList(param);
-        AiServerConfigVo serverConfigVo = serverConfigVos.get(new Random().nextInt(serverConfigVos.size()));
-        return serverConfigVo;
+        //todo 改为用redis实现
+        LambdaQueryWrapper<AiServerConfig> lqw = Wrappers.lambdaQuery();
+        lqw.eq(AiServerConfig::getType,type);
+        lqw.eq(AiServerConfig::getUsable,true);
+        List<AiServerConfigVo> servers = baseMapper.selectVoList(lqw);
+
+
+        //AiServerConfigBo param = new AiServerConfigBo();
+        //param.setType(type);
+        //param.setUsable(true);
+        //List<AiServerConfigVo> servers = queryList(param);
+
+        AiServerConfigVo server = servers.get(new Random().nextInt(servers.size()));
+        return server;
     }
 
     /**

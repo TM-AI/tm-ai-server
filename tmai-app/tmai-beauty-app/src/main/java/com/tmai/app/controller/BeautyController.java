@@ -1,5 +1,6 @@
 package com.tmai.app.controller;
 
+import com.ruoyi.common.annotation.RepeatSubmit;
 import com.ruoyi.common.core.domain.R;
 import com.tmai.system.domain.bo.ImgToImgBo;
 import com.tmai.system.domain.response.ImgToImgResponse;
@@ -19,6 +20,7 @@ import java.io.IOException;
  **/
 @RestController
 @RequestMapping("/imageHandler")
+@Validated
 public class BeautyController {
 
     @Autowired
@@ -28,6 +30,7 @@ public class BeautyController {
      * 美化图片
      */
     @PostMapping("/beautifyImg")
+    @RepeatSubmit(interval = 2000)
     public R<ImgToImgResponse> beautifyImg(@RequestBody @Validated ImgToImgBo request) throws IOException {
         ImgToImgResponse imgToImgResponse = beautyService.imgToImg(request);
 //        File file = new File("C:\\Users\\Administrator\\Desktop\\test.jpg");

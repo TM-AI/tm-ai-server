@@ -1,6 +1,7 @@
 package com.tmai.system.service.impl;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.tmai.system.domain.bo.AiServerLogBo;
 import com.tmai.system.domain.bo.ImgToImgBo;
 import com.tmai.system.domain.bo.RequestParamTypeDTO;
 import com.tmai.system.domain.request.ImgToImgRequest;
@@ -11,16 +12,19 @@ import com.tmai.system.enums.api.IApi;
 import com.tmai.system.enums.api.ImageApiEnum;
 import com.tmai.system.service.IAiParamConfigService;
 import com.tmai.system.service.IAiServerConfigService;
+import com.tmai.system.service.IAiServerLogService;
 import com.tmai.system.service.IBeautyService;
 import com.tmai.system.util.JsonUtil;
 import com.tmai.system.util.ParamTypeResolveUtil;
 import com.tmai.system.util.RestTemplateUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.Date;
 
 /**
  * Created by Tommy Zeng
@@ -29,6 +33,7 @@ import java.util.Collections;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class BeautyServiceImpl implements IBeautyService {
 
     @Autowired
@@ -37,28 +42,43 @@ public class BeautyServiceImpl implements IBeautyService {
     @Autowired
     IAiServerConfigService serverConfigService;
 
+    @Autowired
+    IAiServerLogService serverLogService;
+
     public ImgToImgResponse imgToImg(ImgToImgBo form) {
 
-        AiParamConfigVo paramConfigVo = paramConfigService.queryByCode("BEAUTY_WOMAN");
-        AiServerConfigVo serverConfigVo = serverConfigService.getNextServerByType(1L);
+        AiParamConfigVo param = paramConfigService.queryByCode(form.getBeautyType());
 
-        ImgToImgRequest request = JsonUtil.toObject(paramConfigVo.getParamStr(), ImgToImgRequest.class);
+        AiServerConfigVo server = serverConfigService.getNextServerByType(1L);
+
+        long startTime = System.currentTimeMillis();
+        AiServerLogBo serverLog = new AiServerLogBo();
+        serverLog.setCallTime(new Date((startTime)));
+        serverLog.setServerComment(server.getComment());
+        serverLog.setServerUrl(server.getHost());
+        serverLog.setServerId(server.getId());
+
+        ImgToImgRequest request = JsonUtil.toObject(param.getParamStr(), ImgToImgRequest.class);
         request.setInitImages(Collections.singletonList(form.getImgStr()));
         request.setWidth(form.getWidth());
         request.setHeight(form.getHeight());
         request.setDenoisingStrength(form.getBeautifyLevel() / 100);
 
-        //RequestParamTypeDTO requestParamTypeDTO = ParamTypeResolveUtil.resolveParam(request);
-        //String url = serverConfigVo.getHost() + ImageApiEnum.IMG_TO_IMG.getPath();
+        ImgToImgResponse imgResponse = null;
+        try {
+            imgResponse = execute(server, request, new TypeReference<ImgToImgResponse>() {
+            });
 
-        //return RestTemplateUtil.execute(
-        //    requestParamTypeDTO,
-        //    url,
-        //    new TypeReference<ImgToImgResponse>(),
-        //    ImageApiEnum.IMG_TO_IMG.getHttpMethod());
-
-        return execute(serverConfigVo, request, new TypeReference<ImgToImgResponse>() {
-        });
+            serverLog.setSuccess(true);
+            serverLog.setElapsedTime(System.currentTimeMillis() - startTime);
+        } catch (Exception e) {
+            log.error("调用AI服务失败 => {}", e.getMessage());
+            serverLog.setSuccess(false);
+            serverLog.setElapsedTime(System.currentTimeMillis() - startTime);
+        }finally {
+            serverLogService.insertByBo(serverLog);
+        }
+        return imgResponse;
     }
 
 

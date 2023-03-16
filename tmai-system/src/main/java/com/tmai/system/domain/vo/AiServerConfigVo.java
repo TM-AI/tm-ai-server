@@ -12,7 +12,7 @@ import lombok.Data;
  * AI服务地址配置视图对象 ai_server_config
  *
  * @author ruoyi
- * @date 2023-03-12
+ * @date 2023-03-15
  */
 @Data
 @ExcelIgnoreUnannotated
@@ -38,6 +38,18 @@ public class AiServerConfigVo {
     @ExcelProperty(value = "AI服务类别：", converter = ExcelDictConvert.class)
     @ExcelDictFormat(readConverterExp = "1=：美颜2：不知道")
     private Long type;
+
+    /**
+     * 服务是否可用
+     */
+    @ExcelProperty(value = "服务是否可用")
+    private Boolean usable;
+
+    /**
+     * 备注
+     */
+    @ExcelProperty(value = "备注")
+    private String comment;
 
 
 }

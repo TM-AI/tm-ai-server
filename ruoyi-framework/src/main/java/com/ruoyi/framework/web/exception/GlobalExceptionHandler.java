@@ -14,6 +14,8 @@ import org.mybatis.spring.MyBatisSystemException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import java.util.List;
 
 /**
  * 全局异常处理器
@@ -154,8 +157,15 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public R<Void> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         log.error(e.getMessage(), e);
-        String message = e.getBindingResult().getFieldError().getDefaultMessage();
-        return R.fail(message);
+
+        BindingResult bindingResult = e.getBindingResult();
+        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+        StringBuilder errorMessages = new StringBuilder();
+        for (FieldError fieldError : fieldErrors) {
+            errorMessages.append(fieldError.getField()).append(" ").append(fieldError.getDefaultMessage()).append(";");
+        }
+
+        return R.fail(errorMessages.toString());
     }
 
     /**

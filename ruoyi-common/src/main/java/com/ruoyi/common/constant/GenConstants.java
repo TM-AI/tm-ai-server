@@ -172,6 +172,11 @@ public interface GenConstants {
     String TYPE_BIGDECIMAL = "BigDecimal";
 
     /**
+     * 布尔型
+     */
+    String TYPE_BOOLEAN = "Boolean";
+
+    /**
      * 时间类型
      */
     String TYPE_DATE = "Date";
